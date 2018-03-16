@@ -57,7 +57,7 @@ anonymize_x_vars (m, i) (X name a) =
                 m' =
                     Map.insert name v m
                 (s1, a') =
-                    anonymize_vars' (m, i) a
+                    anonymize_vars' (m', i1) a
             in
                 (s1, X v a')
         Just v ->
@@ -98,7 +98,7 @@ anonymize_vars' (m, i) (Var name) =
             in
                 ((m', i1), Var v)
         Just v ->
-            ((m, i), (Var v))
+            ((m, i), Var v)
 anonymize_vars' s      (Lam args a) =
     let
         (s1, args') =
