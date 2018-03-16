@@ -16,9 +16,9 @@ compile_expr (Var name) =
 compile_expr (App a b) =
     compile_expr a ++ "(" ++ compile_expr b ++ ")"
 compile_expr (Lam (ArgsOne name) a) =
-    "(" ++ name ++ ") => " ++ compile_expr a
+    "function(" ++ name ++ "){return " ++ compile_expr a ++ "}"
 compile_expr (Lam (ArgsCons name next) a) =
-    "(" ++ name ++ ") => " ++ compile_expr (Lam next a)
+    "function(" ++ name ++ "){return " ++ compile_expr (Lam next a) ++ "}"
 compile_expr (Int a) =
     show a
 compile_expr (Bool True) =
@@ -27,6 +27,8 @@ compile_expr (Bool False) =
     "false"
 compile_expr (Brack a) =
     "(" ++ compile_expr a ++ ")"
+compile_expr (Op op a) =
+    "(function(){return " ++ compile_expr a ++ " " ++ op ++ " arguments[0]})"
 
 
 compile_args :: Args -> String

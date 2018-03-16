@@ -7,6 +7,7 @@ data Token
     | TokenPeriod
     | TokenLParen
     | TokenRParen
+    | TokenOp String
     | TokenTrue
     | TokenFalse
     | TokenSpace

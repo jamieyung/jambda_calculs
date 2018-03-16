@@ -17,11 +17,13 @@ import Token (Token(..))
     ')'             { TokenRParen }
     T               { TokenTrue }
     F               { TokenFalse }
+    op              { TokenOp $$ }
     ' '             { TokenSpace }
     var             { TokenVar $$ }
     int             { TokenInt $$ }
 
-%left ' '
+%right ' '
+%left op
 
 %%
 
@@ -29,6 +31,7 @@ Expr    : var                       { Var $1 }
         | int                       { Int $1 }
         | T                         { Bool True }
         | F                         { Bool False }
+        | op Expr                   { Op $1 $2 }
         | '(' Expr ')'              { Brack $2 }
         | Expr ' ' Expr             { App $1 $3 }
         | 'λ' Args '.' Expr         { Lam $2 $4 }

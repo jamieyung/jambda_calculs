@@ -16,6 +16,10 @@ rules :-
   \.            { const TokenPeriod }
   \(            { const TokenLParen }
   \)            { const TokenRParen }
+  \+            { TokenOp }
+  \-            { TokenOp }
+  \*            { TokenOp }
+  \/            { TokenOp }
   "True"        { const TokenTrue }
   "False"       { const TokenFalse }
   " "+          { const TokenSpace }
