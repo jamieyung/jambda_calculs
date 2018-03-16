@@ -14,12 +14,16 @@ rules :-
   \n            ;
   \\            { const TokenLambda }
   \.            { const TokenPeriod }
+  \,            { const TokenComma }
+  \=            { const TokenEq }
   \(            { const TokenLParen }
   \)            { const TokenRParen }
   \+            { TokenBinOp }
   \-            { TokenBinOp }
   \*            { TokenBinOp }
   \/            { TokenBinOp }
+  "let"         { const TokenLet }
+  "in"          { const TokenIn }
   "True"        { const TokenTrue }
   "False"       { const TokenFalse }
   " "+          { const TokenSpace }

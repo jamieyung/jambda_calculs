@@ -1,141 +1,112 @@
-module Main (main) where
+module Main (main, compile) where
 
 
-import Data.Map (Map)
-import Data.Map as Map
-import Expr (Expr(..), Args(..))
+import Ast (Expr(..), Args(..), Xs(..), X(..))
+import Anonymize_Vars (anonymous_var, anonymize_vars)
 import Lexer (lexer)
 import Parser (parser)
 import System.Environment
 import System.IO
 
 
-compile_expr :: Int -> Expr -> String
-compile_expr _ (Var name) =
-    name
+compile_expr :: Int -> Expr -> (Int, String)
+compile_expr i (Var name) =
+    (i, name)
 compile_expr i (App a b) =
-    compile_expr i a ++ "(" ++ compile_expr i b ++ ")"
+    let
+        (i1, a') =
+            compile_expr i a
+        (i2, b') =
+            compile_expr i2 b
+    in
+        (i2, a' ++ "(" ++ b' ++ ")")
 compile_expr i (Lam (ArgsOne name) a) =
-    "function(" ++ name ++ "){return " ++ compile_expr i a ++ "}"
+    let
+        (i1, a') =
+            compile_expr i a
+    in
+        (i1, "function(" ++ name ++ "){return " ++ a' ++ "}")
 compile_expr i (Lam (ArgsCons name next) a) =
-    "function(" ++ name ++ "){return " ++ compile_expr i (Lam next a) ++ "}"
-compile_expr _ (Int a) =
-    show a
-compile_expr _ (Bool True) =
-    "true"
-compile_expr _ (Bool False) =
-    "false"
+    let
+        (i1, a') =
+            compile_expr i (Lam next a)
+    in
+        (i1, "function(" ++ name ++ "){return " ++ a' ++ "}")
+compile_expr i (LetRec xs a) =
+    let
+        (i1, xs') =
+            compile_xs i xs
+        (i2, a') =
+            compile_expr i1 a
+    in
+        (i2, "function(){" ++ xs' ++ "return " ++ a' ++ "}")
+compile_expr i (E_Int a) =
+    (i, show a)
+compile_expr i (Bool True) =
+    (i, "true")
+compile_expr i (Bool False) =
+    (i, "false")
 compile_expr i (Brack a) =
-    "(" ++ compile_expr i a ++ ")"
+    let
+        (i1, a') =
+            compile_expr i a
+    in
+        (i1, "(" ++ a' ++ ")")
 compile_expr i (BinOp op a) =
     let
-        x =
+        (i1, x) =
             anonymous_var i
+        (i2, a') =
+            compile_expr i1 a
     in
-        "(function(" ++ x ++ "){return "
-        ++ compile_expr (i + 1) a ++ " " ++ op ++ " " ++ x ++ "})"
+        (i2, "(function(" ++ x ++ "){return "
+            ++ a' ++ " " ++ op ++ " " ++ x ++ "})")
 compile_expr i (BinOpSolo op) =
     let
-        x =
+        (i1, x) =
             anonymous_var i
 
-        y =
-            anonymous_var (i + 1)
+        (i2, y) =
+            anonymous_var i1
     in
-        "(function(" ++ x ++ "){"
-        ++ " return function(" ++ y ++ ") {return " ++ x ++ " " ++ op ++" " ++
-        y ++ "} })"
+        (i2, "(function(" ++ x ++ "){"
+        ++ " return function(" ++ y ++ ") {return " ++ x ++ " " ++ op ++ " " ++
+        y ++ "} })")
 
 
-anonymous_var :: Int -> String
-anonymous_var i =
-    "_" ++ show i
-
-
-type AnonymousVarMap = (Map String String, Int)
-
-
-anonymise_args_vars :: AnonymousVarMap -> Args -> (AnonymousVarMap, Args)
-anonymise_args_vars (m, i) (ArgsOne name) =
-    case Map.lookup name m of
-        Nothing ->
-            let
-                v =
-                    anonymous_var i
-                m' =
-                    Map.insert name v m
-            in
-                ((m', i + 1), ArgsOne v)
-        Just v ->
-            ((m, i), ArgsOne v)
-anonymise_args_vars (m, i) (ArgsCons name next) =
-    case Map.lookup name m of
-        Nothing ->
-            let
-                v =
-                    anonymous_var i
-                m' =
-                    Map.insert name v m
-                (s1, next') =
-                    anonymise_args_vars (m', i + 1) next
-            in
-                (s1, ArgsCons v next')
-        Just v ->
-            let
-                (s1, next') =
-                    anonymise_args_vars (m, i) next
-            in
-                (s1, ArgsCons v next')
-
-
-anonymise_vars :: AnonymousVarMap -> Expr -> (AnonymousVarMap, Expr)
-anonymise_vars (m, i) (Var name) =
-    case Map.lookup name m of
-        Nothing ->
-            let
-                v =
-                    anonymous_var i
-                m' =
-                    Map.insert name v m
-            in
-                ((m', i + 1), Var v)
-        Just v ->
-            ((m, i), (Var v))
-anonymise_vars s      (Lam args a) =
+compile_xs :: Int -> Xs -> (Int, String)
+compile_xs i (XsOne x) =
+    compile_x i x
+compile_xs i (XsCons x xs) =
     let
-        (s1, args') =
-            anonymise_args_vars s args
+        (i1, x') =
+            compile_x i x
+        (i2, xs') =
+            compile_xs i1 xs
+    in
+        (i2, x' ++ xs')
 
-        (s2, a') =
-            anonymise_vars s1 a
-    in
-        (s2, Lam args' a')
-anonymise_vars s      (App a b) =
+
+compile_x :: Int -> X -> (Int, String)
+compile_x i (X name a) =
     let
-        (s1, a') =
-            anonymise_vars s a
-        (s2, b') =
-            anonymise_vars s1 b
+        (i1, a') =
+            compile_expr i a
     in
-        (s2, App a' b')
-anonymise_vars s      (Brack a) =
-    let
-        (s1, a') =
-            anonymise_vars s a
-    in
-        (s1, Brack a')
-anonymise_vars s x =
-    (s, x)
+        (i1, name ++ "=" ++ a' ++ ";")
 
 
 compile :: String -> String
 compile s =
     let
         ((_, i), ast) =
-            anonymise_vars (Map.empty, 0) $ parser $ lexer s
+            anonymize_vars $ parser $ lexer s
+
+        (_, compiled) =
+            compile_expr i ast
     in
         "// AST: " ++ show ast ++ "\n"
-        ++ "_ = " ++ compile_expr i ast ++ "\nconsole.log(_)"
+        ++ "_ = " ++ compiled ++ "\nconsole.log(_)"
 
 main = do
     args <- getArgs
