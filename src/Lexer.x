@@ -6,7 +6,7 @@ import Token (Token(..))
 
 %wrapper "basic"
 
-@int            = [1-9][0-9]*
+@int            = "0" | [1-9][0-9]*
 @var            = [A-Za-z][A-Za-z0-9'_]*
 
 rules :-
