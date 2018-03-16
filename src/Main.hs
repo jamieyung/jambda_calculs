@@ -21,8 +21,10 @@ compile_expr (Lam (ArgsCons name next) a) =
     "(" ++ name ++ ") => " ++ compile_expr (Lam next a)
 compile_expr (LInt a) =
     show a
-compile_expr (LBool b) =
-    show b
+compile_expr (LBool True) =
+    "true"
+compile_expr (LBool False) =
+    "false"
 compile_expr (Brack a) =
     "(" ++ compile_expr a ++ ")"
 

@@ -11,8 +11,7 @@ import Token (Token(..))
 
 rules :-
 
-  @var          { TokenVar }
-  @int          { TokenInt . read }
+  \n            ;
   \\            { const TokenLambda }
   \.            { const TokenPeriod }
   \(            { const TokenLParen }
@@ -20,7 +19,8 @@ rules :-
   "True"        { const TokenTrue }
   "False"       { const TokenFalse }
   " "+          { const TokenSpace }
-  \n            ;
+  @var          { TokenVar }
+  @int          { TokenInt . read }
 
 {
 lexer = alexScanTokens
