@@ -3,13 +3,13 @@ module Token
     ) where
 
 data Token
-    = TokenVar String
-    | TokenInt Int
-    | TokenLambda
+    = TokenLambda
     | TokenPeriod
     | TokenLParen
     | TokenRParen
     | TokenTrue
     | TokenFalse
     | TokenSpace
+    | TokenVar String
+    | TokenInt Int
     deriving Show

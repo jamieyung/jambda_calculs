@@ -11,8 +11,6 @@ import Token (Token(..))
 %error { parseError }
 
 %token 
-    var             { TokenVar $$ }
-    int             { TokenInt $$ }
     'λ'             { TokenLambda }
     '.'             { TokenPeriod }
     '('             { TokenLParen }
@@ -20,6 +18,8 @@ import Token (Token(..))
     T               { TokenTrue }
     F               { TokenFalse }
     ' '             { TokenSpace }
+    var             { TokenVar $$ }
+    int             { TokenInt $$ }
 
 %left ' '
 
