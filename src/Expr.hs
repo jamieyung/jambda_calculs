@@ -11,8 +11,8 @@ data Expr
     = Var Name
     | App Expr Expr
     | Lam Args Expr
-    | LInt Int
-    | LBool Bool
+    | Int Int
+    | Bool Bool
     | Brack Expr
     deriving (Eq, Show)
 

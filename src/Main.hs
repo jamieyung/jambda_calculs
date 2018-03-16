@@ -19,11 +19,11 @@ compile_expr (Lam (ArgsOne name) a) =
     "(" ++ name ++ ") => " ++ compile_expr a
 compile_expr (Lam (ArgsCons name next) a) =
     "(" ++ name ++ ") => " ++ compile_expr (Lam next a)
-compile_expr (LInt a) =
+compile_expr (Int a) =
     show a
-compile_expr (LBool True) =
+compile_expr (Bool True) =
     "true"
-compile_expr (LBool False) =
+compile_expr (Bool False) =
     "false"
 compile_expr (Brack a) =
     "(" ++ compile_expr a ++ ")"

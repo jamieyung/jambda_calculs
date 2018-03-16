@@ -26,9 +26,9 @@ import Token (Token(..))
 %%
 
 Expr    : var                       { Var $1 }
-        | int                       { LInt $1 }
-        | T                         { LBool True }
-        | F                         { LBool False }
+        | int                       { Int $1 }
+        | T                         { Bool True }
+        | F                         { Bool False }
         | '(' Expr ')'              { Brack $2 }
         | Expr ' ' Expr             { App $1 $3 }
         | 'λ' Args '.' Expr         { Lam $2 $4 }
