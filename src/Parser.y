@@ -43,9 +43,11 @@ Expr        : var                           { Var $1 }
             | Expr ' ' Expr                 { App $1 $3 }
             | 'λ' Args '.' Expr             { Lam $2 $4 }
             | let ' ' Xs ' ' in ' ' Expr    { LetRec $3 $7 }
+            | let ' ' Xs in ' ' Expr        { LetRec $3 $6 }
 
 Xs          : X                             { XsOne $1 }
             | X ',' Xs                      { XsCons $1 $3 }
+            | X ',' ' ' Xs                  { XsCons $1 $4 }
 
 X           : var '=' Expr                  { X $1 $3 }
 

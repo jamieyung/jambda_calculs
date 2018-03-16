@@ -39,7 +39,7 @@ compile_expr i (LetRec xs a) =
         (i2, a') =
             compile_expr i1 a
     in
-        (i2, "function(){" ++ xs' ++ "return " ++ a' ++ "}")
+        (i2, "(function(){" ++ xs' ++ "return " ++ a' ++ "})()")
 compile_expr i (E_Int a) =
     (i, show a)
 compile_expr i (Bool True) =
