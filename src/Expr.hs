@@ -14,7 +14,8 @@ data Expr
     | Int Int
     | Bool Bool
     | Brack Expr
-    | Op String Expr
+    | BinOp String Expr
+    | BinOpSolo String
     deriving (Eq, Show)
 
 data Args

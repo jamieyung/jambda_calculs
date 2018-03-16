@@ -17,13 +17,13 @@ import Token (Token(..))
     ')'             { TokenRParen }
     T               { TokenTrue }
     F               { TokenFalse }
-    op              { TokenOp $$ }
+    binop           { TokenBinOp $$ }
     ' '             { TokenSpace }
     var             { TokenVar $$ }
     int             { TokenInt $$ }
 
 %right ' '
-%left op
+%left binop
 
 %%
 
@@ -31,7 +31,8 @@ Expr    : var                       { Var $1 }
         | int                       { Int $1 }
         | T                         { Bool True }
         | F                         { Bool False }
-        | op Expr                   { Op $1 $2 }
+        | binop                     { BinOpSolo $1 }
+        | binop Expr                { BinOp $1 $2 }
         | '(' Expr ')'              { Brack $2 }
         | Expr ' ' Expr             { App $1 $3 }
         | 'λ' Args '.' Expr         { Lam $2 $4 }
@@ -41,5 +42,5 @@ Args    : var                       { ArgsOne $1 }
 
 {
 parseError :: [Token] -> a
-parseError _ = error "Parse error"
+parseError toks = error $ "Parse error: " ++ show toks
 }
