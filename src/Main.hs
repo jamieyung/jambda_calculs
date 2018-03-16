@@ -139,5 +139,5 @@ compile s =
 
 main = do
     args <- getArgs
-    s <- readFile $ args !! 1
-    writeFile (head args) (compile s)
+    s <- readFile $ head args
+    writeFile (args !! 1) (compile s)
