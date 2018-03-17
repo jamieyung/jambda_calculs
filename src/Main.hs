@@ -16,7 +16,7 @@ compile_expr i (App a b) =
         (i1, a') =
             compile_expr i a
         (i2, b') =
-            compile_expr i2 b
+            compile_expr i1 b
         format_str =
             "%s(%s)"
     in
