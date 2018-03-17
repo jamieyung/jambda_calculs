@@ -14,8 +14,7 @@ rules :-
   \n            ;
   \\            { const TokenLambda }
   \.            { const TokenPeriod }
-  \,            { const TokenComma }
-  \=            { const TokenEq }
+  " = "         { const TokenEq }
   \(            { const TokenLParen }
   \)            { const TokenRParen }
   \+            { TokenBinOp }

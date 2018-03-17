@@ -13,7 +13,6 @@ import Token (Token(..))
 %token 
     'λ'             { TokenLambda }
     '.'             { TokenPeriod }
-    ','             { TokenComma }
     '='             { TokenEq }
     '('             { TokenLParen }
     ')'             { TokenRParen }
@@ -46,8 +45,7 @@ Expr        : Expr ' ' Expr                 { App $1 $3 }
             | F                             { Bool False }
 
 Xs          : X                             { XsOne $1 }
-            | X ',' Xs                      { XsCons $1 $3 }
-            | X ',' ' ' Xs                  { XsCons $1 $4 }
+            | X ' ' Xs                      { XsCons $1 $3 }
 
 X           : var '=' Expr                  { X $1 $3 }
 

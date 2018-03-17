@@ -5,7 +5,6 @@ module Token
 data Token
     = TokenLambda
     | TokenPeriod
-    | TokenComma
     | TokenEq
     | TokenLet
     | TokenIn
