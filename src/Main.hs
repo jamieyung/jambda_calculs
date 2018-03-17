@@ -7,6 +7,7 @@ import Lexer (lexer)
 import Parser (parser)
 import System.Environment
 import System.IO
+import Text.Printf
 
 
 compile_expr :: Int -> Expr -> (Int, String)
@@ -40,8 +41,8 @@ compile_expr i (LetRec xs a) =
             compile_expr i1 a
     in
         (i2, "(function(){" ++ xs' ++ "return " ++ a' ++ "})()")
-compile_expr i (E_Int a) =
-    (i, show a)
+compile_expr i (E_Int x) =
+    (i, show x)
 compile_expr i (Bool True) =
     (i, "true")
 compile_expr i (Bool False) =
@@ -58,20 +59,20 @@ compile_expr i (BinOp op a) =
             anonymous_var i
         (i2, a') =
             compile_expr i1 a
+        format_str =
+            "(function(%s){return %s %s %s})"
     in
-        (i2, "(function(" ++ x ++ "){return "
-            ++ a' ++ " " ++ op ++ " " ++ x ++ "})")
+        (i2, printf format_str x a' op x)
 compile_expr i (BinOpSolo op) =
     let
         (i1, x) =
             anonymous_var i
-
         (i2, y) =
             anonymous_var i1
+        format_str =
+            "(function(%s){ return function(%s) {return %s %s %s} })"
     in
-        (i2, "(function(" ++ x ++ "){"
-        ++ " return function(" ++ y ++ ") {return " ++ x ++ " " ++ op ++ " " ++
-        y ++ "} })")
+        (i2, printf format_str x y x op y)
 
 
 compile_xs :: Int -> Xs -> (Int, String)
@@ -107,6 +108,7 @@ compile s =
     in
         "// AST: " ++ show ast ++ "\n"
         ++ "_ = " ++ compiled ++ "\nconsole.log(_)"
+
 
 main = do
     args <- getArgs
