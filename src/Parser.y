@@ -13,7 +13,7 @@ import Token (Token(..))
 %token 
     'λ'         { TokenLambda }
     '.'         { TokenPeriod }
-    '='         { TokenEq }
+    ':='        { TokenDef }
     '('         { TokenLParen }
     ')'         { TokenRParen }
     let         { TokenLet }
@@ -28,7 +28,7 @@ import Token (Token(..))
 
 %right ' '
 %left ','
-%left '='
+%left ':='
 %left binop
 
 %%
@@ -49,7 +49,7 @@ Expr        : Expr ' ' Expr                     { App $1 $3 }
 DefList     : Def                               { DefListOne $1 }
             | Def ' ' DefList                   { DefListCons $1 $3 }
 
-Def         : var '=' Expr                      { Def $1 $3 }
+Def         : var ':=' Expr                     { Def $1 $3 }
 
 Args        : var                               { ArgsOne $1 }
             | var ' ' Args                      { ArgsCons $1 $3 }

@@ -15,7 +15,7 @@ rules :-
   \n            ;
   \\            { const TokenLambda }
   \.            { const TokenPeriod }
-  " = "         { const TokenEq }
+  " := "        { const TokenDef }
   \(            { const TokenLParen }
   \)            { const TokenRParen }
   \+            { TokenBinOp }
