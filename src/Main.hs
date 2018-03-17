@@ -11,8 +11,6 @@ import Text.Printf
 
 
 compile_expr :: Int -> Expr -> (Int, String)
-compile_expr i (Var name) =
-    (i, name)
 compile_expr i (App a b) =
     let
         (i1, a') =
@@ -41,12 +39,6 @@ compile_expr i (LetRec xs a) =
             compile_expr i1 a
     in
         (i2, "(function(){" ++ xs' ++ "return " ++ a' ++ "})()")
-compile_expr i (E_Int x) =
-    (i, show x)
-compile_expr i (Bool True) =
-    (i, "true")
-compile_expr i (Bool False) =
-    (i, "false")
 compile_expr i (Brack a) =
     let
         (i1, a') =
@@ -73,6 +65,14 @@ compile_expr i (BinOpSolo op) =
             "(function(%s){ return function(%s) {return %s %s %s} })"
     in
         (i2, printf format_str x y x op y)
+compile_expr i (Var name) =
+    (i, name)
+compile_expr i (Int x) =
+    (i, show x)
+compile_expr i (Bool True) =
+    (i, "true")
+compile_expr i (Bool False) =
+    (i, "false")
 
 
 compile_xs :: Int -> Xs -> (Int, String)

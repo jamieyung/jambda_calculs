@@ -33,17 +33,17 @@ import Token (Token(..))
 
 %%
 
-Expr        : var                           { Var $1 }
-            | int                           { E_Int $1 }
-            | T                             { Bool True }
-            | F                             { Bool False }
-            | binop                         { BinOpSolo $1 }
-            | binop Expr                    { BinOp $1 $2 }
-            | '(' Expr ')'                  { Brack $2 }
-            | Expr ' ' Expr                 { App $1 $3 }
+Expr        : Expr ' ' Expr                 { App $1 $3 }
             | 'λ' Args '.' Expr             { Lam $2 $4 }
             | let ' ' Xs ' ' in ' ' Expr    { LetRec $3 $7 }
             | let ' ' Xs in ' ' Expr        { LetRec $3 $6 }
+            | '(' Expr ')'                  { Brack $2 }
+            | binop Expr                    { BinOp $1 $2 }
+            | binop                         { BinOpSolo $1 }
+            | var                           { Var $1 }
+            | int                           { Int $1 }
+            | T                             { Bool True }
+            | F                             { Bool False }
 
 Xs          : X                             { XsOne $1 }
             | X ',' Xs                      { XsCons $1 $3 }

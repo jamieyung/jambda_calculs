@@ -10,15 +10,15 @@ type Name = String
 
 
 data Expr  
-    = Var Name
-    | App Expr Expr
+    = App Expr Expr
     | Lam Args Expr
     | LetRec Xs Expr
-    | E_Int Int
-    | Bool Bool
-    | Brack Expr
     | BinOp String Expr
     | BinOpSolo String
+    | Var Name
+    | Int Int
+    | Bool Bool
+    | Brack Expr
     deriving (Eq, Show)
 
 
