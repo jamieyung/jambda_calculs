@@ -131,6 +131,12 @@ anonymize_vars' s      (Brack a) =
             anonymize_vars' s a
     in
         (s1, Brack a')
+anonymize_vars' s      (BinOp op a) =
+    let
+        (s1, a') =
+            anonymize_vars' s a
+    in
+        (s1, BinOp op a')
 anonymize_vars' s x =
     (s, x)
 
