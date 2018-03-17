@@ -11,19 +11,19 @@ import Token (Token(..))
 %error { parseError }
 
 %token 
-    'λ'             { TokenLambda }
-    '.'             { TokenPeriod }
-    '='             { TokenEq }
-    '('             { TokenLParen }
-    ')'             { TokenRParen }
-    let             { TokenLet }
-    in              { TokenIn }
-    T               { TokenTrue }
-    F               { TokenFalse }
-    binop           { TokenBinOp $$ }
-    ' '             { TokenSpace }
-    var             { TokenVar $$ }
-    int             { TokenInt $$ }
+    'λ'         { TokenLambda }
+    '.'         { TokenPeriod }
+    '='         { TokenEq }
+    '('         { TokenLParen }
+    ')'         { TokenRParen }
+    let         { TokenLet }
+    in          { TokenIn }
+    T           { TokenTrue }
+    F           { TokenFalse }
+    binop       { TokenBinOp $$ }
+    ' '         { TokenSpace }
+    var         { TokenVar $$ }
+    int         { TokenInt $$ }
 
 %right ' '
 %left ','
