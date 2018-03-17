@@ -17,28 +17,36 @@ compile_expr i (App a b) =
             compile_expr i a
         (i2, b') =
             compile_expr i2 b
+        format_str =
+            "%s(%s)"
     in
-        (i2, a' ++ "(" ++ b' ++ ")")
+        (i2, printf format_str a' b')
 compile_expr i (Lam (ArgsOne name) a) =
     let
         (i1, a') =
             compile_expr i a
+        format_str =
+            "(%s)=>%s"
     in
-        (i1, "function(" ++ name ++ "){return " ++ a' ++ "}")
+        (i1, printf format_str name a')
 compile_expr i (Lam (ArgsCons name next) a) =
     let
         (i1, a') =
             compile_expr i (Lam next a)
+        format_str =
+            "(%s)=>%s"
     in
-        (i1, "function(" ++ name ++ "){return " ++ a' ++ "}")
+        (i1, printf format_str name a')
 compile_expr i (LetRec xs a) =
     let
         (i1, xs') =
             compile_xs i xs
         (i2, a') =
             compile_expr i1 a
+        format_str =
+            "(()=>{%s return %s})()"
     in
-        (i2, "(function(){" ++ xs' ++ "return " ++ a' ++ "})()")
+        (i2, printf format_str xs' a')
 compile_expr i (Brack a) =
     let
         (i1, a') =
@@ -52,7 +60,7 @@ compile_expr i (BinOp op a) =
         (i2, a') =
             compile_expr i1 a
         format_str =
-            "(function(%s){return %s %s %s})"
+            "((%s)=>%s %s %s)"
     in
         (i2, printf format_str x a' op x)
 compile_expr i (BinOpSolo op) =
@@ -62,7 +70,7 @@ compile_expr i (BinOpSolo op) =
         (i2, y) =
             anonymous_var i1
         format_str =
-            "(function(%s){ return function(%s) {return %s %s %s} })"
+            "((%s)=>(%s)=>%s %s %s)"
     in
         (i2, printf format_str x y x op y)
 compile_expr i (Var name) =
