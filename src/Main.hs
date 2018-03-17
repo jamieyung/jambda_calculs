@@ -40,19 +40,25 @@ compile_expr i (Lam (ArgsCons name next) a) =
 compile_expr i (LetRec xs a) =
     let
         (i1, xs') =
-            compile_xs i xs
+            compile_deflist i xs
         (i2, a') =
             compile_expr i1 a
         format_str =
-            "(()=>(%s%s))()"
+            "(%s%s)"
     in
         (i2, printf format_str xs' a')
-compile_expr i (Brack a) =
+compile_expr i (IfElse p a b) =
     let
-        (i1, a') =
-            compile_expr i a
+        (i1, p') =
+            compile_expr i p
+        (i2, a') =
+            compile_expr i1 a
+        (i3, b') =
+            compile_expr i2 b
+        format_str =
+            "(%s?%s:%s)"
     in
-        (i1, "(" ++ a' ++ ")")
+        (i3, printf format_str p' a' b')
 compile_expr i (BinOp op a) =
     let
         (i1, x) =
@@ -79,27 +85,33 @@ compile_expr i (Int x) =
     (i, show x)
 compile_expr i (String x) =
     (i, x)
+compile_expr i (Brack a) =
+    let
+        (i1, a') =
+            compile_expr i a
+    in
+        (i1, "(" ++ a' ++ ")")
 compile_expr i (Bool True) =
     (i, "true")
 compile_expr i (Bool False) =
     (i, "false")
 
 
-compile_xs :: Int -> DefList -> (Int, String)
-compile_xs i (DefListOne x) =
-    compile_x i x
-compile_xs i (DefListCons x xs) =
+compile_deflist :: Int -> DefList -> (Int, String)
+compile_deflist i (DefListOne x) =
+    compile_def i x
+compile_deflist i (DefListCons x xs) =
     let
         (i1, x') =
-            compile_x i x
+            compile_def i x
         (i2, xs') =
-            compile_xs i1 xs
+            compile_deflist i1 xs
     in
         (i2, x' ++ xs')
 
 
-compile_x :: Int -> Def -> (Int, String)
-compile_x i (Def name a) =
+compile_def :: Int -> Def -> (Int, String)
+compile_def i (Def name a) =
     let
         (i1, a') =
             compile_expr i a

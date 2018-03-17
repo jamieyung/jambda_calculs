@@ -8,6 +8,9 @@ data Token
     | TokenDef
     | TokenLet
     | TokenIn
+    | TokenIf
+    | TokenThen
+    | TokenElse
     | TokenLParen
     | TokenRParen
     | TokenBinOp String

@@ -9,10 +9,11 @@ module Ast
 type Name = String
 
 
-data Expr  
+data Expr
     = App Expr Expr
     | Lam Args Expr
     | LetRec DefList Expr
+    | IfElse Expr Expr Expr
     | BinOp String Expr
     | BinOpSolo String
     | Var Name

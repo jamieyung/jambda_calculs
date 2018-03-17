@@ -117,6 +117,16 @@ anonymize_vars' s      (LetRec xs a) =
             anonymize_vars' s1 a
     in
         (s2, LetRec xs' a')
+anonymize_vars' s      (IfElse p a b) =
+    let
+        (s1, p') =
+            anonymize_vars' s p
+        (s2, a') =
+            anonymize_vars' s1 a
+        (s3, b') =
+            anonymize_vars' s2 b
+    in
+        (s3, IfElse p' a' b')
 anonymize_vars' s      (App a b) =
     let
         (s1, a') =

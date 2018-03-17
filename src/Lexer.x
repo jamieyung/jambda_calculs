@@ -25,6 +25,9 @@ rules :-
   \/            { TokenBinOp }
   "let"         { const TokenLet }
   "in"          { const TokenIn }
+  "if"          { const TokenIf }
+  "then"        { const TokenThen }
+  "else"        { const TokenElse }
   "True"        { const TokenTrue }
   "False"       { const TokenFalse }
   " "+          { const TokenSpace }
