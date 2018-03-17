@@ -18,6 +18,7 @@ rules :-
   " := "        { const TokenDef }
   \(            { const TokenLParen }
   \)            { const TokenRParen }
+  "=="          { const TokenBinOp "===" }
   \+            { TokenBinOp }
   \-            { TokenBinOp }
   \*            { TokenBinOp }
