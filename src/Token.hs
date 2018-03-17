@@ -16,4 +16,5 @@ data Token
     | TokenSpace
     | TokenVar String
     | TokenInt Int
+    | TokenStr String
     deriving Show

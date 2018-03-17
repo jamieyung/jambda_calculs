@@ -24,6 +24,7 @@ import Token (Token(..))
     ' '         { TokenSpace }
     var         { TokenVar $$ }
     int         { TokenInt $$ }
+    str         { TokenStr $$ }
 
 %right ' '
 %left ','
@@ -41,6 +42,7 @@ Expr        : Expr ' ' Expr                     { App $1 $3 }
             | binop                             { BinOpSolo $1 }
             | var                               { Var $1 }
             | int                               { Int $1 }
+            | str                               { String $1 }
             | T                                 { Bool True }
             | F                                 { Bool False }
 

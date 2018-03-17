@@ -77,6 +77,8 @@ compile_expr i (Var name) =
     (i, name)
 compile_expr i (Int x) =
     (i, show x)
+compile_expr i (String x) =
+    (i, x)
 compile_expr i (Bool True) =
     (i, "true")
 compile_expr i (Bool False) =

@@ -8,6 +8,7 @@ import Token (Token(..))
 
 @int            = "0" | [1-9][0-9]*
 @var            = [A-Za-z][A-Za-z0-9'_]*
+@string         = \" [^ \"]* \"
 
 rules :-
 
@@ -28,6 +29,7 @@ rules :-
   " "+          { const TokenSpace }
   @var          { TokenVar }
   @int          { TokenInt . read }
+  @string       { TokenStr }
 
 {
 lexer = alexScanTokens

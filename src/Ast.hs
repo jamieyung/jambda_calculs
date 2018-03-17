@@ -17,6 +17,7 @@ data Expr
     | BinOpSolo String
     | Var Name
     | Int Int
+    | String String
     | Bool Bool
     | Brack Expr
     deriving (Eq, Show)
