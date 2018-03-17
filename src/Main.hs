@@ -1,7 +1,7 @@
 module Main (main, compile) where
 
 
-import Ast (Expr(..), Args(..), Xs(..), X(..))
+import Ast (Expr(..), Args(..), DefList(..), Def(..))
 import Anonymize_Vars (anonymous_var, anonymize_vars)
 import Lexer (lexer)
 import Parser (parser)
@@ -44,7 +44,7 @@ compile_expr i (LetRec xs a) =
         (i2, a') =
             compile_expr i1 a
         format_str =
-            "(()=>{%s return %s})()"
+            "(()=>(%s%s))()"
     in
         (i2, printf format_str xs' a')
 compile_expr i (Brack a) =
@@ -83,10 +83,10 @@ compile_expr i (Bool False) =
     (i, "false")
 
 
-compile_xs :: Int -> Xs -> (Int, String)
-compile_xs i (XsOne x) =
+compile_xs :: Int -> DefList -> (Int, String)
+compile_xs i (DefListOne x) =
     compile_x i x
-compile_xs i (XsCons x xs) =
+compile_xs i (DefListCons x xs) =
     let
         (i1, x') =
             compile_x i x
@@ -96,13 +96,13 @@ compile_xs i (XsCons x xs) =
         (i2, x' ++ xs')
 
 
-compile_x :: Int -> X -> (Int, String)
-compile_x i (X name a) =
+compile_x :: Int -> Def -> (Int, String)
+compile_x i (Def name a) =
     let
         (i1, a') =
             compile_expr i a
     in
-        (i1, name ++ "=" ++ a' ++ ";")
+        (i1, name ++ "=" ++ a' ++ ",")
 
 
 compile :: String -> String
@@ -115,7 +115,7 @@ compile s =
             compile_expr i ast
     in
         "// AST: " ++ show ast ++ "\n"
-        ++ "_ = " ++ compiled ++ "\nconsole.log(_)"
+        ++ "_=" ++ compiled ++ "\nconsole.log(_)"
 
 
 main = do

@@ -3,7 +3,7 @@ module Anonymize_Vars (anonymous_var, anonymize_vars) where
 
 import Data.Map (Map)
 import Data.Map as Map
-import Ast (Expr(..), Args(..), Xs(..), X(..))
+import Ast (Expr(..), Args(..), DefList(..), Def(..))
 
 
 anonymous_var :: Int -> (Int, String)
@@ -47,8 +47,8 @@ anonymize_args_vars (m, i) (ArgsCons name next) =
                 (s1, ArgsCons v next')
 
 
-anonymize_x_vars :: AnonymousVarMap -> X -> (AnonymousVarMap, X)
-anonymize_x_vars (m, i) (X name a) =
+anonymize_x_vars :: AnonymousVarMap -> Def -> (AnonymousVarMap, Def)
+anonymize_x_vars (m, i) (Def name a) =
     case Map.lookup name m of
         Nothing ->
             let
@@ -59,23 +59,23 @@ anonymize_x_vars (m, i) (X name a) =
                 (s1, a') =
                     anonymize_vars' (m', i1) a
             in
-                (s1, X v a')
+                (s1, Def v a')
         Just v ->
             let
                 (s1, a') =
                     anonymize_vars' (m, i) a
             in
-                (s1, X v a')
+                (s1, Def v a')
 
 
-anonymize_xs_vars :: AnonymousVarMap -> Xs -> (AnonymousVarMap, Xs)
-anonymize_xs_vars s (XsOne x) =
+anonymize_xs_vars :: AnonymousVarMap -> DefList -> (AnonymousVarMap, DefList)
+anonymize_xs_vars s (DefListOne x) =
     let
         (s1, x') =
             anonymize_x_vars s x
     in
-        (s1, XsOne x')
-anonymize_xs_vars s (XsCons x xs) =
+        (s1, DefListOne x')
+anonymize_xs_vars s (DefListCons x xs) =
     let
         (s1, x') =
             anonymize_x_vars s x
@@ -83,7 +83,7 @@ anonymize_xs_vars s (XsCons x xs) =
         (s2, xs') =
             anonymize_xs_vars s1 xs
     in
-        (s2, XsCons x' xs')
+        (s2, DefListCons x' xs')
 
 
 anonymize_vars' :: AnonymousVarMap -> Expr -> (AnonymousVarMap, Expr)

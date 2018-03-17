@@ -1,8 +1,8 @@
 module Ast
     ( Expr(..)
     , Args(..)
-    , Xs(..)
-    , X(..)
+    , DefList(..)
+    , Def(..)
     ) where
 
 
@@ -12,7 +12,7 @@ type Name = String
 data Expr  
     = App Expr Expr
     | Lam Args Expr
-    | LetRec Xs Expr
+    | LetRec DefList Expr
     | BinOp String Expr
     | BinOpSolo String
     | Var Name
@@ -28,12 +28,12 @@ data Args
     deriving (Eq, Show)
 
 
-data Xs
-    = XsOne X
-    | XsCons X Xs
+data DefList
+    = DefListOne Def
+    | DefListCons Def DefList
     deriving (Eq, Show)
 
 
-data X
-    = X Name Expr
+data Def
+    = Def Name Expr
     deriving (Eq, Show)
